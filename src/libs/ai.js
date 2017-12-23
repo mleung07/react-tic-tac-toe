@@ -1,5 +1,4 @@
 // https://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
-
 import helpers from './helpers';
 
 let ai = {
@@ -174,10 +173,7 @@ let ai = {
   },
 
   getCenter(Board) {
-    if(Board[4] === null) {
-      return 4;
-    }
-    return false;
+    return Board[4] === null ? 4 : false;
   },
 
   getOppositeCorner(Board) {
@@ -201,7 +197,6 @@ let ai = {
     const cells = this.emptyCells(Board);
     return cells[Math.floor(Math.random()*cells.length)];
   }
-
 };
 
 export default ai;
