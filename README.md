@@ -7,12 +7,12 @@ AI move strategy using [Newell and Simon's 1972 tic-tac-toe program](http://en.w
 
 ## Installation
 ```
-npm install
+yarn install
 ```
 
 ## Run
 ```
-npm start
+yarn start
 ```
 Open http://localhost:3000 to view it in the browser.
 
@@ -21,5 +21,3 @@ Open http://localhost:3000 to view it in the browser.
 * Lint
 * Difficult levels
 * 2P
-
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
