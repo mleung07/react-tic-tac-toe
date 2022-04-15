@@ -1,4 +1,5 @@
 export enum Players {
-  O = "O",
-  X = "X",
+  HUMAN = "O",
+  AI = "X",
+  EMPTY = '',
 }

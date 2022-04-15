@@ -4,14 +4,14 @@ interface Props {
   onClick: () => void;
 }
 
-const Square = (props: Props) => {
+const Cell = (props: Props) => {
   const {value, highlight, onClick} = props;
 
   return (
-    <button className={"square " + (highlight && 'highlight')}  onClick={() => onClick()}>
+    <button className={"cell " + (highlight && 'highlight')}  onClick={() => onClick()}>
       {value}
     </button>
   );
 }
 
-export default Square;
+export default Cell;

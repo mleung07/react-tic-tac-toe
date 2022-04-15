@@ -10,29 +10,29 @@ export const WINNING_LINES = [
 ];
 
 const helpers = {
-  calculateWinner(squares: Array<string | null>) {
-    for (let i = 0; i < WINNING_LINES.length; i++) {
-      const [a, b, c] = WINNING_LINES[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+  calculateWinner(board: Array<string>) {
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return board[a];
       }
     }
     return undefined;
   },
 
-  highlight(squares: Array<string | null>) {
-    for (let i = 0; i < WINNING_LINES.length; i++) {
-      const [a, b, c] = WINNING_LINES[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return WINNING_LINES[i];
+  highlight(board: Array<string>) {
+    for (const line of WINNING_LINES) {
+      const [a, b, c] = line;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return line;
       }
     }
     return [];
   },
 
-  isFull(squares: Array<string | null>) {
-    return squares.every((square) => {
-      return square !== '';
+  isFull(board: Array<string>) {
+    return board.every((cell) => {
+      return cell !== '';
     })
   }
 }

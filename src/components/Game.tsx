@@ -9,7 +9,7 @@ interface State {
 
 const Game = () => {
   const [state, setState] = React.useState<State>({
-    board: Array(9).fill(''),
+    board: Array(9).fill(Players.EMPTY),
   });
 
   const winner = React.useMemo(() => {
@@ -21,7 +21,7 @@ const Game = () => {
   }, [state.board]);
 
   const aiTurn = React.useMemo(() => {
-    return state.board.filter(x => x !== '').length % 2 === 1;
+    return state.board.filter(x => x !== Players.EMPTY).length % 2 === 1;
   }, [state.board]);
 
   React.useEffect(() => {
@@ -31,7 +31,7 @@ const Game = () => {
     const move = ai.bestMove(state.board.slice());
     if (typeof(move) === 'number') {
       const cells = state.board.slice();
-      cells[move] = Players.X;
+      cells[move] = Players.AI;
 
       setState({
         board: cells,
@@ -44,7 +44,7 @@ const Game = () => {
     if (helpers.calculateWinner(cells) || cells[i]) {
       return;
     }
-    cells[i] = aiTurn ? Players.X : Players.O;
+    cells[i] = aiTurn ? Players.AI : Players.HUMAN;
     setState({
       board: cells,
     });
@@ -52,7 +52,7 @@ const Game = () => {
 
   const restart = () => {
     setState({
-      board: Array(9).fill(''),
+      board: Array(9).fill(Players.EMPTY),
     })
   }
 
@@ -65,7 +65,7 @@ const Game = () => {
     if (helpers.isFull(state.board)) {
       status = 'Draw';
     } else {
-      status = 'Next player: ' + (aiTurn ? Players.X : Players.O);
+      status = 'Next player: ' + (aiTurn ? Players.AI : Players.HUMAN);
       canRestart = false;
     }
   }
