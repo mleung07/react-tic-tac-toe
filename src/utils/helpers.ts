@@ -10,7 +10,7 @@ export const WINNING_LINES = [
 ];
 
 const helpers = {
-  calculateWinner(board: Array<string>) {
+  calculateWinner(board: string[]) {
     for (const line of WINNING_LINES) {
       const [a, b, c] = line;
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
@@ -20,7 +20,7 @@ const helpers = {
     return undefined;
   },
 
-  highlight(board: Array<string>) {
+  highlight(board: string[]) {
     for (const line of WINNING_LINES) {
       const [a, b, c] = line;
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
@@ -30,10 +30,8 @@ const helpers = {
     return [];
   },
 
-  isFull(board: Array<string>) {
-    return board.every((cell) => {
-      return cell !== '';
-    })
+  isFull(board: string[]) {
+    return board.every((cell) => cell !== '');
   }
 }
 

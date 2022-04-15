@@ -1,3 +1,4 @@
+import React from 'react';
 import Cell from './Cell';
 
 interface Props {
@@ -6,16 +7,16 @@ interface Props {
   onClick: (arg0: number) => void;
 }
 
-const Board = (props: Props) => {
-  const {cells, highlight, onClick} = props;
+function Board(props: Props) {
+  const { cells, highlight, onClick } = props;
 
   const renderCell = (i: number) => {
     const shouldHighlight = highlight.includes(i);
-    return <Cell value={cells[i]} highlight={shouldHighlight} key={i} onClick={() => onClick(i)}/>;
-  }
+    return <Cell value={cells[i]} highlight={shouldHighlight} key={i} onClick={() => onClick(i)} />;
+  };
 
   const renderRow = (row: number) => {
-    let squares = [];
+    const squares = [];
     for (let i = 0; i < 3; i++) {
       squares.push(renderCell(row * 3 + i));
     }
@@ -24,21 +25,23 @@ const Board = (props: Props) => {
         {squares}
       </div>
     );
-  }
+  };
 
   const renderBoard = () => {
-    let rows = [];
+    const rows = [];
     for (let i = 0; i < 3; i++) {
       rows.push(renderRow(i));
     }
     return (
       rows
-    )
-  }
+    );
+  };
 
-  return <>
-    {renderBoard()}
-  </>;
+  return (
+    <>
+      {renderBoard()}
+    </>
+  );
 }
 
 export default Board;

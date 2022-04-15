@@ -4,38 +4,32 @@ import { ai, helpers } from '../utils';
 import { Players } from '../types';
 
 interface State {
-  board: Array<string>;
+  board: string[];
 }
 
-const Game = () => {
+function Game() {
   const [state, setState] = React.useState<State>({
     board: Array(9).fill(Players.EMPTY),
   });
 
-  const winner = React.useMemo(() => {
-    return helpers.calculateWinner(state.board);
-  }, [state.board]);
+  const winner = React.useMemo(() => helpers.calculateWinner(state.board), [state.board]);
 
-  const highlight = React.useMemo(() => {
-    return helpers.highlight(state.board);
-  }, [state.board]);
+  const highlight = React.useMemo(() => helpers.highlight(state.board), [state.board]);
 
-  const aiTurn = React.useMemo(() => {
-    return state.board.filter(x => x !== Players.EMPTY).length % 2 === 1;
-  }, [state.board]);
+  const aiTurn = React.useMemo(() => state.board.filter((x) => x !== Players.EMPTY).length % 2 === 1, [state.board]);
 
   React.useEffect(() => {
     if (winner || helpers.isFull(state.board) || !aiTurn) {
       return;
     }
     const move = ai.bestMove(state.board.slice());
-    if (typeof(move) === 'number') {
+    if (typeof (move) === 'number') {
       const cells = state.board.slice();
       cells[move] = Players.AI;
 
       setState({
         board: cells,
-    });
+      });
     }
   }, [state]);
 
@@ -48,26 +42,24 @@ const Game = () => {
     setState({
       board: cells,
     });
-  }
+  };
 
   const restart = () => {
     setState({
       board: Array(9).fill(Players.EMPTY),
-    })
-  }
+    });
+  };
 
   let status = '';
   const restartBtn = <button onClick={() => restart()}>Restart</button>;
   let canRestart = true;
   if (winner) {
-    status = 'Winner: ' + winner;
+    status = `Winner: ${winner}`;
+  } else if (helpers.isFull(state.board)) {
+    status = 'Draw';
   } else {
-    if (helpers.isFull(state.board)) {
-      status = 'Draw';
-    } else {
-      status = 'Next player: ' + (aiTurn ? Players.AI : Players.HUMAN);
-      canRestart = false;
-    }
+    status = `Next player: ${aiTurn ? Players.AI : Players.HUMAN}`;
+    canRestart = false;
   }
 
   return (
@@ -75,7 +67,7 @@ const Game = () => {
       <h1 className="game-title">Tic Tac Toe</h1>
       <div className="game-wrapper">
         <div className="game-board">
-          <Board cells={state.board} highlight={highlight} onClick={(i) => handleClick(i)}/>
+          <Board cells={state.board} highlight={highlight} onClick={(i) => handleClick(i)} />
         </div>
       </div>
       <div className="game-info">
