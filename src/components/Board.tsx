@@ -1,17 +1,17 @@
 import Square from './Square';
 
 interface Props {
-  squares: string[];
+  cells: string[];
   highlight: number[];
   onClick: (arg0: number) => void;
 }
 
 const Board = (props: Props) => {
-  const {squares, highlight, onClick} = props;
+  const {cells, highlight, onClick} = props;
 
   const renderSquare = (i: number) => {
     const shouldHighlight = highlight.includes(i);
-    return <Square value={squares[i]} highlight={shouldHighlight} key={i} onClick={() => onClick(i)}/>;
+    return <Square value={cells[i]} highlight={shouldHighlight} key={i} onClick={() => onClick(i)}/>;
   }
 
   const renderRow = (row: number) => {

@@ -4,83 +4,57 @@ import { ai, helpers } from '../utils';
 import { Players } from '../types';
 
 interface State {
-  history: Array<{
-    squares: Array<string>;
-  }>;
-  stepNumber: number;
-  xIsNext: boolean;
-  highlight: Array<number>;
+  board: Array<string>;
 }
 
 const Game = () => {
   const [state, setState] = React.useState<State>({
-    history: [{
-      squares: Array(9).fill(''),
-    }],
-    stepNumber: 0,
-    xIsNext: false,
-    highlight: []
+    board: Array(9).fill(''),
   });
 
-  const handleClick = (i: number) => {
-    const history = state.history.slice(0, state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (helpers.calculateWinner(squares) || squares[i]) {
+  const winner = React.useMemo(() => {
+    return helpers.calculateWinner(state.board);
+  }, [state.board]);
+
+  const highlight = React.useMemo(() => {
+    return helpers.highlight(state.board);
+  }, [state.board]);
+
+  const aiTurn = React.useMemo(() => {
+    return state.board.filter(x => x !== '').length % 2 === 1;
+  }, [state.board]);
+
+  React.useEffect(() => {
+    if (winner || helpers.isFull(state.board) || !aiTurn) {
       return;
     }
-    squares[i] = state.xIsNext ? Players.X : Players.O;
+    const move = ai.bestMove(state.board.slice());
+    if (typeof(move) === 'number') {
+      const cells = state.board.slice();
+      cells[move] = Players.X;
+
+      setState({
+        board: cells,
+    });
+    }
+  }, [state]);
+
+  const handleClick = (i: number) => {
+    const cells = state.board.slice();
+    if (helpers.calculateWinner(cells) || cells[i]) {
+      return;
+    }
+    cells[i] = aiTurn ? Players.X : Players.O;
     setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      stepNumber: history.length,
-      xIsNext: !state.xIsNext,
-      highlight: helpers.highlight(squares),
+      board: cells,
     });
   }
 
   const restart = () => {
     setState({
-      history: [{
-        squares: Array(9).fill(''),
-      }],
-      stepNumber: 0,
-      xIsNext: false,
-      highlight: [],
+      board: Array(9).fill(''),
     })
   }
-
-  React.useEffect(() => {
-    const history = state.history;
-    const current = history[state.stepNumber];
-    const winner = helpers.calculateWinner(current.squares);
-      
-    if (!winner && history.length < 9) {
-      const aiMove = state.xIsNext;
-      if (aiMove) {
-        const move = ai.bestMove(current.squares.slice());
-        if (typeof(move) === 'number') {
-          const squares = current.squares.slice();
-          squares[move] = Players.X;
-
-          setState({
-            history: history.concat([{
-              squares: squares,
-            }]),
-            stepNumber: history.length,
-            xIsNext: !aiMove,
-            highlight: helpers.highlight(squares),
-          });
-        }
-      }
-    }
-  }, [state]);
-
-  const history = state.history;
-  const current = history[state.stepNumber];
-  const winner = helpers.calculateWinner(current.squares);
-  const highlight = state.highlight;
 
   let status = '';
   const restartBtn = <button onClick={() => restart()}>Restart</button>;
@@ -88,10 +62,10 @@ const Game = () => {
   if (winner) {
     status = 'Winner: ' + winner;
   } else {
-    if (helpers.isFull(current.squares)) {
+    if (helpers.isFull(state.board)) {
       status = 'Draw';
     } else {
-      status = 'Next player: ' + (state.xIsNext ? Players.X : Players.O);
+      status = 'Next player: ' + (aiTurn ? Players.X : Players.O);
       canRestart = false;
     }
   }
@@ -101,7 +75,7 @@ const Game = () => {
       <h1 className="game-title">Tic Tac Toe</h1>
       <div className="game-wrapper">
         <div className="game-board">
-          <Board squares={current.squares} highlight={highlight} onClick={(i) => handleClick(i)}/>
+          <Board cells={state.board} highlight={highlight} onClick={(i) => handleClick(i)}/>
         </div>
       </div>
       <div className="game-info">

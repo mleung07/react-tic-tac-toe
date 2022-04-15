@@ -3,6 +3,8 @@ This project is a Tic Tac Toe game built with React, extension of the [tutorial]
 
 AI move strategy using [Newell and Simon's 1972 tic-tac-toe program](http://en.wikipedia.org/wiki/Tic-tac-toe#Strategy).
 
+Powered by [Vite](https://vitejs.dev/).
+
 [Live Demo](https://mleung07.github.io/react-tic-tac-toe)
 
 ## Installation
