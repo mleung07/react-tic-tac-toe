@@ -31,8 +31,8 @@ const helpers = {
   },
 
   isFull(board: string[]) {
-    return board.every((cell) => cell !== '');
-  }
-}
+    return board.every((cell) => cell !== "");
+  },
+};
 
 export default helpers;

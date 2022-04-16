@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface Props {
   value: string;
@@ -6,14 +6,17 @@ interface Props {
   onClick: () => void;
 }
 
-function Cell(props: Props) {
+const Cell = (props: Props) => {
   const { value, highlight = false, onClick } = props;
 
   return (
-    <button className={`cell${highlight && ' highlight'}`} onClick={() => onClick()}>
+    <button
+      className={`cell ${highlight && "highlight"}`}
+      onClick={() => onClick()}
+    >
       {value}
     </button>
   );
-}
+};
 
 export default Cell;

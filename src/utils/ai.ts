@@ -1,21 +1,25 @@
 // https://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
-import { Players } from '../types';
-import helpers, { WINNING_LINES } from './helpers';
+import { Players } from "../types";
+import helpers, { WINNING_LINES } from "./helpers";
 
 const ai = {
   emptyCells(board: string[]) {
-    return board.flatMap((cell, index) => (cell === Players.EMPTY ? index : []));
+    return board.flatMap((cell, index) =>
+      cell === Players.EMPTY ? index : []
+    );
   },
 
   playerCells(board: string[]) {
-    return board.flatMap((cell, index) => (cell === Players.HUMAN ? index : []));
+    return board.flatMap((cell, index) =>
+      cell === Players.HUMAN ? index : []
+    );
   },
 
   findFork(board: string[], player: string) {
     const possibles: number[][] = [];
     WINNING_LINES.forEach((line) => {
-      let myCount = 0; let
-        emptyCount = 0;
+      let myCount = 0;
+      let emptyCount = 0;
       line.forEach((cell) => {
         board[cell] === player && myCount++;
         board[cell] === Players.EMPTY && emptyCount++;
@@ -33,8 +37,11 @@ const ai = {
     possibles.flat(2).forEach((cell) => {
       allCells[cell] += 1;
     });
-    const useableCells = allCells.map((cell, index) => (emptyCells.includes(index) ? cell : 0));
-    const winableCells = useableCells.map((cell, index) => (cell > 1 ? index : undefined))
+    const useableCells = allCells.map((cell, index) =>
+      emptyCells.includes(index) ? cell : 0
+    );
+    const winableCells = useableCells
+      .map((cell, index) => (cell > 1 ? index : undefined))
       .filter((cell) => cell !== undefined);
     if (winableCells && winableCells.length > 0) {
       return winableCells[Math.floor(Math.random() * winableCells.length)];
@@ -77,12 +84,16 @@ const ai = {
   },
 
   getCorner(board: string[]) {
-    const corners = this.emptyCells(board).filter((n) => [0, 2, 6, 8].includes(n));
+    const corners = this.emptyCells(board).filter((n) =>
+      [0, 2, 6, 8].includes(n)
+    );
     return corners[Math.floor(Math.random() * corners.length)];
   },
 
   getSide(board: string[]) {
-    const sides = this.emptyCells(board).filter((n) => [1, 3, 5, 7].includes(n));
+    const sides = this.emptyCells(board).filter((n) =>
+      [1, 3, 5, 7].includes(n)
+    );
     return sides[Math.floor(Math.random() * sides.length)];
   },
 
@@ -96,49 +107,49 @@ const ai = {
 
     move = this.canWin(board, Players.AI);
     if (this.isValid(move)) {
-      console.log('win', move);
+      console.log("win", move);
       return move;
     }
 
     move = this.canWin(board, Players.HUMAN);
     if (this.isValid(move)) {
-      console.log('block', move);
+      console.log("block", move);
       return move;
     }
 
     move = this.canFork(board, Players.AI);
     if (this.isValid(move)) {
-      console.log('fork', move);
+      console.log("fork", move);
       return move;
     }
 
     move = this.canFork(board, Players.HUMAN);
     if (this.isValid(move)) {
-      console.log('block fork', move);
+      console.log("block fork", move);
       return move;
     }
 
     move = this.getCenter(board);
     if (this.isValid(move)) {
-      console.log('center', move);
+      console.log("center", move);
       return move;
     }
 
     move = this.getOppositeCorner(board);
     if (this.isValid(move)) {
-      console.log('opp corner', move);
+      console.log("opp corner", move);
       return move;
     }
 
     move = this.getCorner(board);
     if (this.isValid(move)) {
-      console.log('corner', move);
+      console.log("corner", move);
       return move;
     }
 
     move = this.getSide(board);
     if (move) {
-      console.log('side', move);
+      console.log("side", move);
       return move;
     }
 
