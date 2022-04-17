@@ -3,18 +3,6 @@ import { Players } from "../types";
 import helpers, { WINNING_LINES } from "./helpers";
 
 const ai = {
-  emptyCells(board: string[]) {
-    return board.flatMap((cell, index) =>
-      cell === Players.EMPTY ? index : []
-    );
-  },
-
-  playerCells(board: string[]) {
-    return board.flatMap((cell, index) =>
-      cell === Players.HUMAN ? index : []
-    );
-  },
-
   findFork(board: string[], player: string) {
     const possibles: number[][] = [];
     WINNING_LINES.forEach((line) => {
@@ -33,15 +21,15 @@ const ai = {
 
   findIntersect(board: string[], possibles: number[][]) {
     const allCells = Array(9).fill(0);
-    const emptyCells = this.emptyCells(board);
+    const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     possibles.flat(2).forEach((cell) => {
       allCells[cell] += 1;
     });
-    const useableCells = allCells.map((cell, index) =>
-      emptyCells.includes(index) ? cell : 0
+    const useableCells = allCells.map((cell, i) =>
+      emptyCells.includes(i) ? cell : 0
     );
     const winableCells = useableCells
-      .map((cell, index) => (cell > 1 ? index : undefined))
+      .map((cell, i) => (cell > 1 ? i : undefined))
       .filter((cell) => cell !== undefined);
     if (winableCells && winableCells.length > 0) {
       return winableCells[Math.floor(Math.random() * winableCells.length)];
@@ -54,10 +42,10 @@ const ai = {
   },
 
   canWin(board: string[], player: string) {
-    const cells = this.emptyCells(board);
+    const cells = helpers.getIndexByPlayer(board, Players.EMPTY);
     let move: number | undefined;
     cells.forEach((cell) => {
-      const curr = [...board];
+      const curr = board.slice();
       curr[cell] = player;
       if (helpers.calculateWinner(curr)) {
         move = cell;
@@ -76,29 +64,29 @@ const ai = {
   },
 
   getOppositeCorner(board: string[]) {
-    const playerCells = this.playerCells(board);
+    const playerCells = helpers.getIndexByPlayer(board, Players.HUMAN);
     const corners = playerCells.filter((n) => [0, 2, 6, 8].includes(n));
     const opp = corners.map((n) => 8 - n);
-    const playableCells = opp.filter((x) => this.emptyCells(board).includes(x));
+    const playableCells = opp.filter((x) =>
+      helpers.getIndexByPlayer(board, Players.EMPTY).includes(x)
+    );
     return playableCells[Math.floor(Math.random() * opp.length)];
   },
 
   getCorner(board: string[]) {
-    const corners = this.emptyCells(board).filter((n) =>
-      [0, 2, 6, 8].includes(n)
-    );
+    const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
+    const corners = emptyCells.filter((n) => [0, 2, 6, 8].includes(n));
     return corners[Math.floor(Math.random() * corners.length)];
   },
 
   getSide(board: string[]) {
-    const sides = this.emptyCells(board).filter((n) =>
-      [1, 3, 5, 7].includes(n)
-    );
+    const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
+    const sides = emptyCells.filter((n) => [1, 3, 5, 7].includes(n));
     return sides[Math.floor(Math.random() * sides.length)];
   },
 
   random(board: string[]) {
-    const cells = this.emptyCells(board);
+    const cells = helpers.getIndexByPlayer(board, Players.EMPTY);
     return cells[Math.floor(Math.random() * cells.length)];
   },
 

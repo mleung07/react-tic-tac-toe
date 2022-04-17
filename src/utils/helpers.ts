@@ -33,6 +33,10 @@ const helpers = {
   isFull(board: string[]) {
     return board.every((cell) => cell !== "");
   },
+
+  getIndexByPlayer(board: string[], player: string) {
+    return board.flatMap((cell, i) => (cell === player ? i : []));
+  },
 };
 
 export default helpers;

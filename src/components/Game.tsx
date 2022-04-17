@@ -12,27 +12,27 @@ const Game = () => {
     board: Array(9).fill(Players.EMPTY),
   });
 
-  const winner = React.useMemo(
-    () => helpers.calculateWinner(state.board),
+  const [isFull, winner] = React.useMemo(
+    () => [helpers.isFull(state.board), helpers.calculateWinner(state.board)],
     [state.board]
   );
 
   const highlight = React.useMemo(
-    () => helpers.highlight(state.board),
+    () => (winner ? helpers.highlight(state.board) : []),
     [state.board]
   );
 
-  const aiTurn = React.useMemo(
+  const shouldAiMove = React.useMemo(
     () => state.board.filter((x) => x !== Players.EMPTY).length % 2 === 1,
     [state.board]
   );
 
   React.useEffect(() => {
-    if (winner || helpers.isFull(state.board) || !aiTurn) {
+    if (winner || isFull || !shouldAiMove) {
       return;
     }
     const move = ai.bestMove(state.board.slice());
-    if (typeof move === "number") {
+    if (move) {
       const cells = state.board.slice();
       cells[move] = Players.AI;
 
@@ -47,7 +47,7 @@ const Game = () => {
     if (helpers.calculateWinner(cells) || cells[i]) {
       return;
     }
-    cells[i] = aiTurn ? Players.AI : Players.HUMAN;
+    cells[i] = shouldAiMove ? Players.AI : Players.HUMAN;
     setState({
       board: cells,
     });
@@ -60,15 +60,12 @@ const Game = () => {
   };
 
   let status = "";
-  const restartBtn = <button onClick={() => restart()}>Restart</button>;
-  let canRestart = true;
   if (winner) {
     status = `Winner: ${winner}`;
-  } else if (helpers.isFull(state.board)) {
+  } else if (isFull) {
     status = "Draw";
   } else {
-    status = `Next player: ${aiTurn ? Players.AI : Players.HUMAN}`;
-    canRestart = false;
+    status = `Next player: ${shouldAiMove ? Players.AI : Players.HUMAN}`;
   }
 
   return (
@@ -85,7 +82,11 @@ const Game = () => {
       </div>
       <div className="game-info">
         <div>{status}</div>
-        <div>{canRestart && restartBtn}</div>
+        <div>
+          {(winner || isFull) && (
+            <button onClick={() => restart()}>Restart</button>
+          )}
+        </div>
       </div>
     </div>
   );
