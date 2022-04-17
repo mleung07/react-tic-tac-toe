@@ -3,11 +3,6 @@ body {
   margin: 20px;
 }
 
-ol,
-ul {
-  padding-left: 30px;
-}
-
 .board-row:after {
   clear: both;
   content: "";
@@ -27,10 +22,6 @@ ul {
   border-right-width: 0px;
 }
 
-.status {
-  margin-bottom: 10px;
-}
-
 .cell {
   background: #fff;
   border: 3px solid #000;
@@ -48,10 +39,6 @@ ul {
 
 .cell:focus {
   outline: none;
-}
-
-.kbd-navigation .cell:focus {
-  background: #ddd;
 }
 
 .game {

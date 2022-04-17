@@ -3,7 +3,7 @@ import { Players, Board, Line } from "../types";
 import helpers, { WINNING_LINES } from "./helpers";
 
 const ai = {
-  findFork(board: Board, player: string) {
+  findForkableLines(board: Board, player: string) {
     const possibles: Line[] = [];
     WINNING_LINES.forEach((line) => {
       let myCount = 0;
@@ -19,7 +19,7 @@ const ai = {
     return possibles;
   },
 
-  findIntersect(board: Board, possibles: Line[]) {
+  findIntersectCell(board: Board, possibles: Line[]) {
     const allCells = Array(9).fill(0);
     const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     possibles.flat(2).forEach((cell) => {
@@ -55,15 +55,15 @@ const ai = {
   },
 
   canFork(board: Board, player: string) {
-    const possibles = this.findFork(board, player);
-    return this.findIntersect(board, possibles);
+    const possibles = this.findForkableLines(board, player);
+    return this.findIntersectCell(board, possibles);
   },
 
-  getCenter(board: Board) {
+  canGetCenter(board: Board) {
     return board[4] === Players.EMPTY ? 4 : undefined;
   },
 
-  getOppositeCorner(board: Board) {
+  canGetOppositeCorner(board: Board) {
     const playerCells = helpers.getIndexByPlayer(board, Players.HUMAN);
     const corners = playerCells.filter((n) => [0, 2, 6, 8].includes(n));
     const opp = corners.map((n) => 8 - n);
@@ -73,13 +73,13 @@ const ai = {
     return playableCells[Math.floor(Math.random() * opp.length)];
   },
 
-  getCorner(board: Board) {
+  canGetCorner(board: Board) {
     const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     const corners = emptyCells.filter((n) => [0, 2, 6, 8].includes(n));
     return corners[Math.floor(Math.random() * corners.length)];
   },
 
-  getSide(board: Board) {
+  canGetSide(board: Board) {
     const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     const sides = emptyCells.filter((n) => [1, 3, 5, 7].includes(n));
     return sides[Math.floor(Math.random() * sides.length)];
@@ -95,49 +95,49 @@ const ai = {
 
     move = this.canWin(board, Players.AI);
     if (this.isValid(move)) {
-      console.log("win", move);
+      // console.log("win", move);
       return move;
     }
 
     move = this.canWin(board, Players.HUMAN);
     if (this.isValid(move)) {
-      console.log("block", move);
+      // console.log("block", move);
       return move;
     }
 
     move = this.canFork(board, Players.AI);
     if (this.isValid(move)) {
-      console.log("fork", move);
+      // console.log("fork", move);
       return move;
     }
 
     move = this.canFork(board, Players.HUMAN);
     if (this.isValid(move)) {
-      console.log("block fork", move);
+      // console.log("block fork", move);
       return move;
     }
 
-    move = this.getCenter(board);
+    move = this.canGetCenter(board);
     if (this.isValid(move)) {
-      console.log("center", move);
+      // console.log("center", move);
       return move;
     }
 
-    move = this.getOppositeCorner(board);
+    move = this.canGetOppositeCorner(board);
     if (this.isValid(move)) {
-      console.log("opp corner", move);
+      // console.log("opp corner", move);
       return move;
     }
 
-    move = this.getCorner(board);
+    move = this.canGetCorner(board);
     if (this.isValid(move)) {
-      console.log("corner", move);
+      // console.log("corner", move);
       return move;
     }
 
-    move = this.getSide(board);
+    move = this.canGetSide(board);
     if (move) {
-      console.log("side", move);
+      // console.log("side", move);
       return move;
     }
 
