@@ -22,9 +22,13 @@ yarn start
 
 Open http://localhost:3000 to view it in the browser.
 
+## Assumptions
+
+- Player will start first
+- Player will be using O, and AI will be using X
+
 ## TODO
 
 - Test
 - Context implementation
 - Difficult levels
-- 2P

@@ -38,7 +38,7 @@ const ai = {
   },
 
   isValid(move: number | undefined) {
-    return !!move || move === 0;
+    return move === 0 || !!move;
   },
 
   canWin(board: Board, player: string) {
