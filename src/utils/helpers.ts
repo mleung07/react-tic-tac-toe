@@ -1,4 +1,6 @@
-export const WINNING_LINES = [
+import { Board, Line } from "../types";
+
+export const WINNING_LINES: Line[] = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -10,7 +12,7 @@ export const WINNING_LINES = [
 ];
 
 const helpers = {
-  calculateWinner(board: string[]) {
+  calculateWinner(board: Board) {
     for (const line of WINNING_LINES) {
       const [a, b, c] = line;
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
@@ -20,7 +22,7 @@ const helpers = {
     return undefined;
   },
 
-  highlight(board: string[]) {
+  highlight(board: Board) {
     for (const line of WINNING_LINES) {
       const [a, b, c] = line;
       if (board[a] && board[a] === board[b] && board[a] === board[c]) {
@@ -30,11 +32,11 @@ const helpers = {
     return [];
   },
 
-  isFull(board: string[]) {
+  isFull(board: Board) {
     return board.every((cell) => cell !== "");
   },
 
-  getIndexByPlayer(board: string[], player: string) {
+  getIndexByPlayer(board: Board, player: string) {
     return board.flatMap((cell, i) => (cell === player ? i : []));
   },
 };

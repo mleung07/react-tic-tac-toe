@@ -1,10 +1,10 @@
 // https://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
-import { Players } from "../types";
+import { Players, Board, Line } from "../types";
 import helpers, { WINNING_LINES } from "./helpers";
 
 const ai = {
-  findFork(board: string[], player: string) {
-    const possibles: number[][] = [];
+  findFork(board: Board, player: string) {
+    const possibles: Line[] = [];
     WINNING_LINES.forEach((line) => {
       let myCount = 0;
       let emptyCount = 0;
@@ -19,7 +19,7 @@ const ai = {
     return possibles;
   },
 
-  findIntersect(board: string[], possibles: number[][]) {
+  findIntersect(board: Board, possibles: Line[]) {
     const allCells = Array(9).fill(0);
     const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     possibles.flat(2).forEach((cell) => {
@@ -41,7 +41,7 @@ const ai = {
     return !!move || move === 0;
   },
 
-  canWin(board: string[], player: string) {
+  canWin(board: Board, player: string) {
     const cells = helpers.getIndexByPlayer(board, Players.EMPTY);
     let move: number | undefined;
     cells.forEach((cell) => {
@@ -54,16 +54,16 @@ const ai = {
     return move;
   },
 
-  canFork(board: string[], player: string) {
+  canFork(board: Board, player: string) {
     const possibles = this.findFork(board, player);
     return this.findIntersect(board, possibles);
   },
 
-  getCenter(board: string[]) {
+  getCenter(board: Board) {
     return board[4] === Players.EMPTY ? 4 : undefined;
   },
 
-  getOppositeCorner(board: string[]) {
+  getOppositeCorner(board: Board) {
     const playerCells = helpers.getIndexByPlayer(board, Players.HUMAN);
     const corners = playerCells.filter((n) => [0, 2, 6, 8].includes(n));
     const opp = corners.map((n) => 8 - n);
@@ -73,24 +73,24 @@ const ai = {
     return playableCells[Math.floor(Math.random() * opp.length)];
   },
 
-  getCorner(board: string[]) {
+  getCorner(board: Board) {
     const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     const corners = emptyCells.filter((n) => [0, 2, 6, 8].includes(n));
     return corners[Math.floor(Math.random() * corners.length)];
   },
 
-  getSide(board: string[]) {
+  getSide(board: Board) {
     const emptyCells = helpers.getIndexByPlayer(board, Players.EMPTY);
     const sides = emptyCells.filter((n) => [1, 3, 5, 7].includes(n));
     return sides[Math.floor(Math.random() * sides.length)];
   },
 
-  random(board: string[]) {
+  random(board: Board) {
     const cells = helpers.getIndexByPlayer(board, Players.EMPTY);
     return cells[Math.floor(Math.random() * cells.length)];
   },
 
-  bestMove(board: string[]) {
+  bestMove(board: Board) {
     let move: number | undefined;
 
     move = this.canWin(board, Players.AI);
